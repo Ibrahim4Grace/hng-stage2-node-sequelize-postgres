@@ -1,0 +1,13 @@
+2024-07-06 00:25:16 [31merror[39m: ReferenceError: uuidv4 is not defined
+    at file:///C:/Users/PT%20WORLD/Desktop/hng-stage2/controllers/authController.js:44:15
+2024-07-06 11:19:04 [31merror[39m: SequelizeEagerLoadingError: Organization is associated to User using an alias. You've included an alias (organizations), but it does not match the alias(es) defined in your association (Organizations).
+    at User._getIncludedAssociation (C:\Users\PT WORLD\Desktop\hng-stage2\node_modules\sequelize\lib\model.js:574:15)
+    at User._validateIncludedElement (C:\Users\PT WORLD\Desktop\hng-stage2\node_modules\sequelize\lib\model.js:502:53)
+    at C:\Users\PT WORLD\Desktop\hng-stage2\node_modules\sequelize\lib\model.js:421:37
+    at Array.map (<anonymous>)
+    at User._validateIncludedElements (C:\Users\PT WORLD\Desktop\hng-stage2\node_modules\sequelize\lib\model.js:417:39)
+    at User.findAll (C:\Users\PT WORLD\Desktop\hng-stage2\node_modules\sequelize\lib\model.js:1124:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async User.findOne (C:\Users\PT WORLD\Desktop\hng-stage2\node_modules\sequelize\lib\model.js:1240:12)
+    at async User.findByPk (C:\Users\PT WORLD\Desktop\hng-stage2\node_modules\sequelize\lib\model.js:1221:12)
+    at async file:///C:/Users/PT%20WORLD/Desktop/hng-stage2/controllers/userController.js:63:18
