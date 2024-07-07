@@ -13,20 +13,11 @@ describe('Auth Endpoints', () => {
       console.log('Connection has been established successfully.');
       await User.sync({ force: true });
       await Organization.sync({ force: true });
-      await sequelize.sync({ force: true }); // Sync all models including UserOrganizations
+      await sequelize.sync({ force: true });
     } catch (error) {
       console.error('Unable to connect to the database:', error);
     }
   });
-  //   beforeAll(async () => {
-  //     try {
-  //       await sequelize.authenticate();
-  //       console.log('Connection has been established successfully.');
-  //       await sequelize.sync({ force: true }); // Reset database before tests
-  //     } catch (error) {
-  //       console.error('Unable to connect to the database:', error);
-  //     }
-  //   });
 
   afterAll(async () => {
     await sequelize.close();
@@ -116,30 +107,6 @@ describe('Auth Endpoints', () => {
         email: 'john.doe@example.com',
       });
     });
-    // it('Should Log the user in successfully', async () => {
-    //   await request(app).post('/auth/register').send({
-    //     firstName: 'Jane',
-    //     lastName: 'Doe',
-    //     email: 'jane.doe@example.com',
-    //     password: 'Password123!',
-    //   });
-
-    //   const user = await User.findOne({
-    //     where: { email: 'jane.doe@example.com' },
-    //   });
-    //   console.log('Registered User:', user);
-
-    //   const res = await request(app).post('/auth/login').send({
-    //     email: 'jane.doe@example.com',
-    //     password: 'Password123!',
-    //   });
-
-    //   console.log('Login Response:', res.body);
-    //   expect(res.status).toBe(200);
-    //   expect(res.body.status).toBe('success');
-    //   expect(res.body.data.user.email).toBe('jane.doe@example.com');
-    //   expect(res.body.data.accessToken).toBeDefined();
-    // });
 
     it('Should Fail if credentials are incorrect', async () => {
       const res = await request(app).post('/auth/login').send({
