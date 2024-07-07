@@ -30,7 +30,7 @@ function keepAlive() {
 }
 
 cron.schedule('*/5 * * * *', () => {
-  keepAlive('/');
+  keepAlive('https://hng-stage2-xof6.onrender.com');
   console.log('pinging the server every minute');
 });
 
