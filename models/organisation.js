@@ -1,9 +1,9 @@
 import { DataTypes, Model } from 'sequelize';
 import { sequelize } from '../config/db.js';
 
-class Organization extends Model {}
+class Organisation extends Model {}
 
-Organization.init(
+Organisation.init(
   {
     orgId: {
       type: DataTypes.STRING,
@@ -21,9 +21,9 @@ Organization.init(
   },
   {
     sequelize,
-    modelName: 'Organization',
-    tableName: 'Organizations',
+    modelName: 'Organisation',
+    tableName: 'Organisations',
   }
 );
 
-export default Organization;
+export default Organisation;

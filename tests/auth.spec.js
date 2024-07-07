@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../server';
 import jwt from 'jsonwebtoken';
-import { User, Organization } from '../models/index.js';
+import { User, Organisation } from '../models/index.js';
 import { sequelize } from '../config/db';
 import customEnv from '../config/customEnv.js';
 import bcrypt from 'bcryptjs';
@@ -12,7 +12,7 @@ describe('Auth Endpoints', () => {
       await sequelize.authenticate();
       console.log('Connection has been established successfully.');
       await User.sync({ force: true });
-      await Organization.sync({ force: true });
+      await Organisation.sync({ force: true });
       await sequelize.sync({ force: true });
     } catch (error) {
       console.error('Unable to connect to the database:', error);
@@ -42,10 +42,10 @@ describe('Auth Endpoints', () => {
       expect(res.body.data.user.phone).toBe('1234567890');
       expect(res.body.data.accessToken).toBeDefined();
 
-      const organization = await Organization.findOne({
-        where: { name: "John's Organization" },
+      const organisation = await Organisation.findOne({
+        where: { name: "John's Organisation" },
       });
-      expect(organization).toBeDefined();
+      expect(organisation).toBeDefined();
     });
 
     it('Should Fail If Required Fields Are Missing', async () => {
@@ -121,7 +121,7 @@ describe('Auth Endpoints', () => {
     });
   });
 
-  describe('GET /organizations', () => {
+  describe('GET /organisations', () => {
     let token;
 
     beforeAll(async () => {
@@ -136,19 +136,19 @@ describe('Auth Endpoints', () => {
       token = res.body.data.accessToken;
     });
 
-    it('Should Get User Organizations', async () => {
+    it('Should Get User Organisations', async () => {
       const res = await request(app)
-        .get('/api/organizations')
+        .get('/api/organisations')
         .set('Authorization', `Bearer ${token}`);
 
       console.log(res.body); // Additional logging for debugging
       expect(res.status).toBe(200);
       expect(res.body.status).toBe('success');
-      expect(res.body.data.organizations.length).toBeGreaterThan(0);
+      expect(res.body.data.organisations.length).toBeGreaterThan(0);
     });
 
     it('Should Fail if user is unauthorized', async () => {
-      const res = await request(app).get('/api/organizations');
+      const res = await request(app).get('/api/organisations');
 
       console.log(res.body); // Additional logging for debugging
       expect(res.status).toBe(401);

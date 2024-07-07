@@ -1,10 +1,10 @@
 import asyncHandler from '../middlewares/asyncHandler.js';
 import logger from '../logger/logger.js';
-import { Organization, User } from '../models/index.js';
+import { Organisation, User } from '../models/index.js';
 import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
 
-// This endpoint retrieves the user's own record or user records in organizations they belong to or created.
+// This endpoint retrieves the user's own record or user records in organisations they belong to or created.
 export const getUserById = asyncHandler(async (req, res) => {
   const userId = req.params.id;
   const loggedInUserId = req.user.userId; // Assume req.user is populated by authentication middleware
@@ -49,22 +49,22 @@ export const getUserById = asyncHandler(async (req, res) => {
   }
 });
 
-// This endpoint retrieves all organizations the user belongs to or has created.
-export const getUserOrganizations = asyncHandler(async (req, res) => {
+// This endpoint retrieves all orgaorganisationnizations the user belongs to or has created.
+export const getUserOrganisations = asyncHandler(async (req, res) => {
   const userId = req.user.userId;
 
   try {
     const user = await User.findByPk(userId, {
       include: [
         {
-          model: Organization,
-          as: 'organizations',
+          model: Organisation,
+          as: 'organisations',
           through: { attributes: [] }, // Omit the join table
         },
       ],
     });
 
-    const organizations = user.organizations.map((org) => ({
+    const organisations = user.organisations.map((org) => ({
       orgId: org.orgId,
       name: org.name,
       description: org.description,
@@ -72,8 +72,8 @@ export const getUserOrganizations = asyncHandler(async (req, res) => {
 
     res.status(200).json({
       status: 'success',
-      message: 'Organizations retrieved successfully',
-      data: { organizations },
+      message: 'Organisations retrieved successfully',
+      data: { organisations },
     });
   } catch (error) {
     logger.error(error);
@@ -85,39 +85,39 @@ export const getUserOrganizations = asyncHandler(async (req, res) => {
   }
 });
 
-// This endpoint retrieves a single organization record the logged-in user has access to.
-export const getOrganizationById = asyncHandler(async (req, res) => {
+// This endpoint retrieves a single organisation record the logged-in user has access to.
+export const getOrganisationById = asyncHandler(async (req, res) => {
   const orgId = req.params.orgId;
   const userId = req.user.userId; // Assume req.user is populated by authentication middleware
 
   try {
-    const organization = await Organization.findByPk(orgId, {
+    const organisation = await Organisation.findByPk(orgId, {
       include: [
         {
           model: User,
           as: 'users',
           where: { userId },
           attributes: [], // Do not return user details
-          required: true, // Inner join, only return organizations the user is part of
+          required: true, // Inner join, only return organisation the user is part of
         },
       ],
     });
 
-    if (!organization) {
+    if (!organisation) {
       return res.status(404).json({
         status: 'Not Found',
-        message: 'Organization not found',
+        message: 'Organisation not found',
         statusCode: 404,
       });
     }
 
     res.status(200).json({
       status: 'success',
-      message: 'Organization record retrieved successfully',
+      message: 'organisation record retrieved successfully',
       data: {
-        orgId: organization.orgId,
-        name: organization.name,
-        description: organization.description,
+        orgId: organisation.orgId,
+        name: organisation.name,
+        description: organisation.description,
       },
     });
   } catch (error) {
@@ -130,8 +130,8 @@ export const getOrganizationById = asyncHandler(async (req, res) => {
   }
 });
 
-// This endpoint allows a user to create a new organization.
-export const createOrganization = asyncHandler(async (req, res) => {
+// This endpoint allows a user to create a new organisation.
+export const createOrganisation = asyncHandler(async (req, res) => {
   const userId = req.user.userId; // Assume req.user is populated by authentication middleware
   const { name, description } = req.body;
 
@@ -145,22 +145,22 @@ export const createOrganization = asyncHandler(async (req, res) => {
   }
 
   try {
-    const newOrganization = await Organization.create({
+    const newOrganisation = await Organisation.create({
       orgId: uuidv4(),
       name,
       description: description || '',
     });
 
     const user = await User.findByPk(userId);
-    await user.addOrganization(newOrganization);
+    await user.addOrganisation(newOrganisation);
 
     res.status(201).json({
       status: 'success',
-      message: 'Organization created successfully',
+      message: 'Organisation created successfully',
       data: {
-        orgId: newOrganization.orgId,
-        name: newOrganization.name,
-        description: newOrganization.description,
+        orgId: newOrganisation.orgId,
+        name: newOrganisation.name,
+        description: newOrganisation.description,
       },
     });
   } catch (error) {
@@ -173,8 +173,8 @@ export const createOrganization = asyncHandler(async (req, res) => {
   }
 });
 
-//This endpoint adds a user to a particular organization
-export const addUserToOrganization = asyncHandler(async (req, res) => {
+//This endpoint adds a user to a particular organisation
+export const addUserToOrganisation = asyncHandler(async (req, res) => {
   const { orgId } = req.params;
   const { userId } = req.body;
 
@@ -188,12 +188,12 @@ export const addUserToOrganization = asyncHandler(async (req, res) => {
   }
 
   try {
-    // Find the organization by orgId
-    const organization = await Organization.findByPk(orgId);
-    if (!organization) {
+    // Find the organisation by orgId
+    const organisation = await Organisation.findByPk(orgId);
+    if (!organisation) {
       return res.status(404).json({
         status: 'Not Found',
-        message: 'Organization not found',
+        message: 'Organisation not found',
         statusCode: 404,
       });
     }
@@ -208,12 +208,12 @@ export const addUserToOrganization = asyncHandler(async (req, res) => {
       });
     }
 
-    // Add the user to the organization
-    await organization.addUser(user);
+    // Add the user to the organisation
+    await organisation.addUser(user);
 
     res.status(200).json({
       status: 'success',
-      message: 'User added to organization successfully',
+      message: 'User added to organisation successfully',
     });
   } catch (error) {
     logger.error(error);

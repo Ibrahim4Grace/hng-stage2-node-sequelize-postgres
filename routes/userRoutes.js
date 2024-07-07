@@ -2,18 +2,18 @@ import express from 'express';
 import { authenticate } from '../middlewares/authMiddleware.js';
 import {
   getUserById,
-  getUserOrganizations,
-  getOrganizationById,
-  createOrganization,
-  addUserToOrganization,
+  getUserOrganisations,
+  getOrganisationById,
+  createOrganisation,
+  addUserToOrganisation,
 } from '../controllers/userController.js';
 
 const router = express.Router();
 
 router.get('/users/:id', authenticate, getUserById);
-router.get('/organizations', authenticate, getUserOrganizations);
-router.get('/organizations/:orgId', authenticate, getOrganizationById);
-router.post('/organizations', authenticate, createOrganization);
-router.post('/organizations/:orgId/users', authenticate, addUserToOrganization);
+router.get('/organisations', authenticate, getUserOrganisations);
+router.get('/organisations/:orgId', authenticate, getOrganisationById);
+router.post('/organisations', authenticate, createOrganisation);
+router.post('/organisations/:orgId/users', authenticate, addUserToOrganisation);
 
 export default router;

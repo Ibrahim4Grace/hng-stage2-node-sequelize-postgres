@@ -1,17 +1,17 @@
 import User from './user.js';
-import Organization from './organization.js';
+import Organisation from './organisation.js';
 import { sequelize } from '../config/db.js';
 
-const UserOrganizations = sequelize.define(
-  'UserOrganizations',
+const UserOrganisations = sequelize.define(
+  'UserOrganisations',
   {},
   { timestamps: false }
 );
 
-User.belongsToMany(Organization, {
-  through: UserOrganizations,
-  as: 'organizations',
+User.belongsToMany(Organisation, {
+  through: UserOrganisations,
+  as: 'organisations',
 });
-Organization.belongsToMany(User, { through: UserOrganizations, as: 'users' });
+Organisation.belongsToMany(User, { through: UserOrganisations, as: 'users' });
 
-export { User, Organization, UserOrganizations, sequelize };
+export { User, Organisation, UserOrganisations, sequelize };

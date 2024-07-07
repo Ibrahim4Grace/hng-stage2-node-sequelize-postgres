@@ -2,7 +2,7 @@ import asyncHandler from '../middlewares/asyncHandler.js';
 import logger from '../logger/logger.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { Organization, User } from '../models/index.js';
+import { Organisation, User } from '../models/index.js';
 import registrationSchema from '../validations/registrationVal.js';
 import { sanitizeObject } from '../utils/index.js';
 import customEnv from '../config/customEnv.js';
@@ -55,13 +55,13 @@ export const register = asyncHandler(async (req, res) => {
       phone,
     });
 
-    const organization = await Organization.create({
+    const organisation = await Organisation.create({
       orgId: uuidv4(),
-      name: `${firstName}'s Organization`,
+      name: `${firstName}'s Organisation`,
       description: '',
     });
 
-    await newUser.addOrganization(organization);
+    await newUser.addOrganisation(organisation);
 
     const token = jwt.sign({ userId: newUser.userId }, customEnv.jwtSecret, {
       expiresIn: customEnv.userAccessTokenExpireTime,

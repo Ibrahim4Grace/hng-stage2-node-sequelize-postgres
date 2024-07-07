@@ -2,8 +2,8 @@
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    console.log('Applying migration: create-user-organizations');
-    await queryInterface.createTable('UserOrganizations', {
+    console.log('Applying migration: create-user-organisations');
+    await queryInterface.createTable('UserOrganisations', {
       userId: {
         type: Sequelize.STRING,
         references: {
@@ -16,7 +16,7 @@ module.exports = {
       orgId: {
         type: Sequelize.STRING,
         references: {
-          model: 'Organizations',
+          model: 'Organisations',
           key: 'orgId',
         },
         onDelete: 'CASCADE',
@@ -36,6 +36,6 @@ module.exports = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('UserOrganizations');
+    await queryInterface.dropTable('UserOrganisations');
   },
 };
