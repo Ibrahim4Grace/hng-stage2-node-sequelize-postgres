@@ -2,8 +2,8 @@ import express from 'express';
 const router = express.Router();
 
 // Import route handlers
-import authRoutes from '../routes/authRoutes.js';
-import userRoutes from '../routes/userRoutes.js';
+import authRoutes from './authRoutes.js';
+import userRoutes from './userRoutes.js';
 
 // Mount the landing page route
 router.use('/auth', authRoutes);

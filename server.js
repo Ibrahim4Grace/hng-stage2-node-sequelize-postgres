@@ -28,7 +28,7 @@ app.use(routes);
 app.use(notFound);
 app.use(errorHandler);
 
-const port = process.env.PORT || 6000;
+const port = process.env.POSTGRES_PORT || 6000;
 
 sequelize.sync().then(() => {
   app.listen(port, () => {
@@ -36,3 +36,4 @@ sequelize.sync().then(() => {
   });
 });
 connectDb();
+export default app;

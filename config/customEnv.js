@@ -3,17 +3,13 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const customEnv = {
-  port: process.env.PORT,
-  password: process.env.MYSQL_PASSWORD,
-  username: process.env.MYSQL_USERNAME,
-  mysqlDb: process.env.MYSQL_DATABASE,
-  host: process.env.MYSQL_HOST,
-  dialect: process.env.MYSQL_DIALECT,
+  port: process.env.POSTGRES_PORT,
+  password: process.env.POSTGRES_PASSWORD,
+  username: process.env.POSTGRES_USERNAME,
+  mysqlDb: process.env.POSTGRES_DATABASE,
+  host: process.env.POSTGRES_HOST,
+  dialect: process.env.POSTGRES_DIALECT,
   nodeEnv: process.env.NODE_ENV || 'development',
-  baseUrl:
-    process.env.NODE_ENV === 'development'
-      ? process.env.DEV_BASE_URL
-      : process.env.PROD_BASE_URL,
 
   jwtSecret: process.env.JWT_SECRET,
 

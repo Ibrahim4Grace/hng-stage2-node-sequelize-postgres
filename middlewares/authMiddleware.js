@@ -7,8 +7,8 @@ export const authenticate = async (req, res, next) => {
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({
-      status: 'Unauthorized',
-      message: 'No token provided',
+      status: 'error',
+      message: 'Unauthorized',
       statusCode: 401,
     });
   }

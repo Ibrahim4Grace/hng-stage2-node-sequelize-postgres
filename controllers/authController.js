@@ -1,11 +1,10 @@
-import { APIError } from '../middlewares/errorMiddleware.js';
 import asyncHandler from '../middlewares/asyncHandler.js';
 import logger from '../logger/logger.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { Organization, User } from '../models/index.js';
 import registrationSchema from '../validations/registrationVal.js';
-import { sanitizeInput, sanitizeObject } from '../utils/index.js';
+import { sanitizeObject } from '../utils/index.js';
 import customEnv from '../config/customEnv.js';
 import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
@@ -23,25 +22,28 @@ export const register = asyncHandler(async (req, res) => {
     }));
     return res.status(422).json({ success: false, errors });
   }
-
-  const existingUser = await User.findOne({
-    where: {
-      [Op.or]: [{ email: value.email }, { phone: value.phone }],
-    },
-  });
-
-  if (existingUser) {
-    if (existingUser.email === value.email) {
-      throw new APIError('Email already registered', 422);
-    }
-    if (existingUser.phone === value.phone) {
-      throw new APIError('Phone number already registered', 422);
-    }
-  }
-
-  const { firstName, lastName, email, password, phone } = value;
-
   try {
+    const existingUser = await User.findOne({
+      where: {
+        [Op.or]: [{ email: value.email }, { phone: value.phone }],
+      },
+    });
+
+    if (existingUser) {
+      const errorMsg =
+        existingUser.email === value.email
+          ? 'Email already registered'
+          : 'Phone number already registered';
+
+      return res.status(422).json({
+        status: 'Bad request',
+        message: errorMsg,
+        errors: [{ msg: errorMsg }],
+      });
+    }
+
+    const { firstName, lastName, email, password, phone } = value;
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newUser = await User.create({
@@ -92,8 +94,11 @@ export const register = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
+  console.log(`Attempting to login user with email: ${email}`);
+
   if (!email || !password) {
     return res.status(422).json({
+      status: 'error',
       errors: [
         { field: 'email', message: 'Email is required' },
         { field: 'password', message: 'Password is required' },
@@ -103,18 +108,30 @@ export const login = asyncHandler(async (req, res) => {
 
   try {
     const user = await User.findOne({ where: { email } });
-
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    if (!user) {
+      console.log(`No user found with email: ${email}`);
       return res.status(401).json({
-        status: 'Bad request',
+        status: 'error',
         message: 'Authentication failed',
-        statusCode: 401,
       });
     }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+
+    if (!isPasswordValid) {
+      console.log(`Invalid password for email: ${email}`);
+      return res.status(401).json({
+        status: 'error',
+        message: 'Authentication failed',
+      });
+    }
+    console.log(`Password is valid for user: ${email}`);
 
     const token = jwt.sign({ userId: user.userId }, customEnv.jwtSecret, {
       expiresIn: customEnv.userAccessTokenExpireTime,
     });
+
+    console.log(`Login successful for user: ${email}, Token: ${token}`);
 
     res.status(200).json({
       status: 'success',
