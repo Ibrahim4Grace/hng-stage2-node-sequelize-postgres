@@ -1,18 +1,24 @@
 import { Sequelize } from 'sequelize';
-import customEnv from '../config/customEnv.js';
+import pg from 'pg';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-const sequelize = new Sequelize(
-  customEnv.mysqlDb,
-  customEnv.username,
-  customEnv.password,
-  {
-    host: customEnv.host,
-    dialect: customEnv.dialect,
-  }
-);
+const sequelize = new Sequelize({
+  dialect: 'postgres',
+  dialectModule: pg,
+  host: process.env.POSTGRES_HOST,
+  username: process.env.POSTGRES_USERNAME,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DATABASE,
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
+});
 
 const connectDb = async () => {
   try {
