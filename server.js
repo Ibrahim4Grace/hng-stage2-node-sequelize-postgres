@@ -7,6 +7,8 @@ import morgan from 'morgan';
 import { connectDb, sequelize } from './config/db.js';
 import routes from './routes/index.js';
 import { notFound, errorHandler } from './middlewares/errorMiddleware.js';
+import https from 'https';
+import cron from 'node-cron';
 
 const app = express();
 
@@ -16,6 +18,21 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(morgan('tiny'));
 app.disable('x-powered-by');
+
+function keepAlive() {
+  https
+    .get(url, (res) => {
+      console.log(`Status: ${res.statusCode}`);
+    })
+    .on('error', (error) => {
+      console.error(`Error: ${error.message}`);
+    });
+}
+
+cron.schedule('*/5 * * * *', () => {
+  keepAlive('/');
+  console.log('pinging the server every minute');
+});
 
 // Use routes defined in the routes module
 app.get('/', (req, res) => {
