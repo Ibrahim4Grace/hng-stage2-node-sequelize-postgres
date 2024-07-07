@@ -19,7 +19,8 @@ app.use(cookieParser());
 app.use(morgan('tiny'));
 app.disable('x-powered-by');
 
-function keepAlive() {
+const url = 'https://hng-stage2-xof6.onrender.com';
+function keepAlive(url) {
   https
     .get(url, (res) => {
       console.log(`Status: ${res.statusCode}`);
@@ -30,8 +31,8 @@ function keepAlive() {
 }
 
 cron.schedule('*/5 * * * *', () => {
-  keepAlive('https://hng-stage2-xof6.onrender.com');
-  console.log('pinging the server every minute');
+  keepAlive(url);
+  console.log('Pinging the server every 5 minutes');
 });
 
 // Use routes defined in the routes module
