@@ -1,5 +1,5 @@
 import request from 'supertest';
-import app from '../server';
+import app from '../index.js';
 import jwt from 'jsonwebtoken';
 import { User, Organisation } from '../models/index.js';
 import { sequelize } from '../config/db';

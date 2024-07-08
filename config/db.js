@@ -20,6 +20,12 @@ const sequelize = new Sequelize({
   },
 });
 
+// const sequelize = new Sequelize(
+//   process.env.DATABASE_URL,
+//   { dialectModule: require('pg') }
+//   // { dialect: "postgres" }
+// );
+
 const connectDb = async () => {
   try {
     await sequelize.authenticate();
